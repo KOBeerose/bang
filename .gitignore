@@ -30,3 +30,10 @@ removed_bangs_report.md
 src/bang_auto.ts
 *.bak
 .agent/
+
+# wrangler files
+.wrangler
+.dev.vars*
+!.dev.vars.example
+.env*
+!.env.example
