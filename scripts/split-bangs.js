@@ -162,6 +162,14 @@ const bangsFilename = `bangs.${contentHash}.json`;
 fs.writeFileSync(path.join(publicDir, bangsFilename), bangsJson);
 console.log(`Wrote public/${bangsFilename} (${(bangsJson.length / 1024).toFixed(0)} KB)`);
 
+// Copy the same compact JSON to chrome-extension/bangs.json (single source of truth)
+const extensionDir = path.join(path.dirname(publicDir), 'chrome-extension');
+if (fs.existsSync(extensionDir)) {
+    const extensionBangsPath = path.join(extensionDir, 'bangs.json');
+    fs.writeFileSync(extensionBangsPath, bangsJson);
+    console.log(`Wrote chrome-extension/bangs.json (${(bangsJson.length / 1024).toFixed(0)} KB)`);
+}
+
 // Clean up old bangs*.json files in public/ (both hashed and unhashed), except the one we just wrote
 const oldBangFiles = fs.readdirSync(publicDir).filter(f => 
     f.match(/^bangs(\.[a-f0-9]+)?\.json$/) && f !== bangsFilename
