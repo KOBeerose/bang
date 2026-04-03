@@ -18,17 +18,17 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       
       - name: Setup pnpm
-        uses: pnpm/action-setup@v4
+        uses: pnpm/action-setup@v5
         with:
           version: 9
       
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
-          node-version: '20'
+          node-version: '24'
           cache: 'pnpm'
       
       - name: Install dependencies
@@ -46,11 +46,11 @@ jobs:
       - name: Check for changes
         id: git-check
         run: |
-          git diff --quiet src/bang.ts src/bangs-top.ts public/ || echo "changes=true" >> $GITHUB_OUTPUT
+          git diff --quiet src/bang.ts src/bangs-top.ts public/ chrome-extension/bangs.json || echo "changes=true" >> $GITHUB_OUTPUT
       
       - name: Create Pull Request
         if: steps.git-check.outputs.changes == 'true'
-        uses: peter-evans/create-pull-request@v6
+        uses: peter-evans/create-pull-request@v8
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: "chore: update bang list from DuckDuckGo and Kagi"
@@ -70,6 +70,7 @@ jobs:
             - `src/bang.ts` - Updated `BANGS_FILENAME` with new hash
             - `src/bangs-top.ts` - Updated top bangs for inline bundling
             - `public/bangs.*.json` - New bang database
+            - `chrome-extension/bangs.json` - Extension bang database (synced from public/)
             
             ---
             *Please review the changes and merge if everything looks good.*
